@@ -118,7 +118,17 @@ def _ensure_all():
                 st.session_state["model"]         = model
                 st.session_state["model_name"]    = "FourCastNetLite"
             else:
-    _ph.empty()   # hide the loading message once done
+                # No data — use numpy fallback
+                st.session_state["trained_model"] = "numpy_fallback"
+                st.session_state["model"]         = "numpy_fallback"
+                st.session_state["model_name"]    = "ClimateAI Lite"
+        except:
+            st.session_state["trained_model"] = "numpy_fallback"
+            st.session_state["model"]         = "numpy_fallback"
+            st.session_state["model_name"]    = "ClimateAI Lite"
+
+    _ph.empty()
+
 
 _ensure_all()
 
