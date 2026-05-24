@@ -56,21 +56,20 @@ def page_farmer():
     <span>AI-powered crop &amp; irrigation guidance</span></span></div>""",
     unsafe_allow_html=True)
 
-    with st.expander("ℹ️ How to use this page"):
-        st.markdown("Enter your current field conditions below. The AI will suggest the best "
-                    "crops, irrigation schedule, and warn you about floods or heatwaves. "
-                    "All suggestions are based on GraphCast/FourCastNet weather predictions.")
+    with st.expander(t("farmer_how", lang)):
+        st.markdown(t("farmer_how_txt", lang))
 
-    _section("🌡️ Enter Field Conditions")
+    _section(t("field_cond", lang))
     col1,col2,col3 = st.columns(3)
     with col1:
-        rain  = st.slider("🌧️ Predicted Rainfall (%)",0,100,55)
-        moist = st.slider("💧 Soil Moisture (%)",0,100,45)
+        rain  = st.slider(t("sl_rain_pct", lang), 0, 100, 55)
+        moist = st.slider(t("sl_moisture", lang),  0, 100, 45)
     with col2:
-        temp  = st.slider("🌡️ Temperature (°C)",0,50,32)
-        season= st.selectbox("📅 Season",["Kharif","Rabi","Zaid"])
+        temp   = st.slider(t("sl_temp", lang),     0,  50, 32)
+        season = st.selectbox(t("sl_season", lang), ["Kharif","Rabi","Zaid"])
     with col3:
-        area  = st.selectbox("🏘️ Region",["🌾 Plains","🏔️ Hills","🌊 Coastal","🏜️ Arid"])
+        area = st.selectbox(t("sl_region_f", lang) if "sl_region_f" in T else t("sl_region",lang),
+                            ["🌾 Plains","🏔️ Hills","🌊 Coastal","🏜️ Arid"])
         st.markdown("<br>",unsafe_allow_html=True)
         analyse = st.button(t("farmer_title", lang), use_container_width=True)
 
@@ -96,7 +95,7 @@ def page_farmer():
         st.success(t("safe", lang))
 
     # ── 4 Output cards ────────────────────────────────────────────────────────
-    _section("📋 Advisory Results")
+    _section(t("advisory_res", lang))
     r1,r2,r3,r4 = st.columns(4)
     r1.markdown(f"<div class='glow-card' style='border-color:{crop_col}55;text-align:center;'>"
                 f"<p style='font-size:1.4rem;margin:0;'>🌱</p>"
@@ -108,7 +107,7 @@ def page_farmer():
                 f"<p style='font-size:1.4rem;margin:0;'>💧</p>"
                 f"<p style='color:#06b6d4;font-weight:700;font-size:.85rem;margin:4px 0 2px;'>{t('irr_need',lang)}</p>"
                 f"<p style='color:#e2e8f0;font-size:.8rem;'>{irr_need:.0f} mm/day</p>"
-                f"<p style='color:#06b6d4;font-size:.72rem;'>{'Irrigate today' if irr_need>15 else 'Rain sufficient'}</p></div>",
+                f"<p style='color:#06b6d4;font-size:.72rem;'>{t('irr_today',lang) if irr_need>15 else t('rain_suff',lang)}</p></div>",
                 unsafe_allow_html=True)
     r3.markdown(f"<div class='glow-card' style='border-color:{flood_col}55;text-align:center;'>"
                 f"<p style='font-size:1.4rem;margin:0;'>🌊</p>"
@@ -125,17 +124,15 @@ def page_farmer():
 
     # ── Fertilizer timing ─────────────────────────────────────────────────────
     st.markdown("<br>",unsafe_allow_html=True)
-    _section("🌿 Fertilizer & Irrigation Timing")
-    fert_timing = ("✅ Apply fertilizer now — soil moisture optimal." if 35<moist<70
-                   else "⚠️ Wait for rain / irrigation before applying fertilizer.")
-    irr_advice  = ("💧 Drip irrigate 20mm every 2 days." if irr_need>15
-                   else "☔ Natural rainfall sufficient this week.")
-    _card(f"<p style='color:#22c55e;font-weight:700;margin:0 0 6px;'>🌿 Recommendations</p>"
+    _section(t("fert_sec", lang))
+    fert_timing = (t("fert_ok",lang) if 35<moist<70 else t("fert_wait",lang))
+    irr_advice  = (t("irr_drip",lang) if irr_need>15 else t("irr_rain_ok",lang))
+    _card(f"<p style='color:#22c55e;font-weight:700;margin:0 0 6px;'>🌿 {t('fert_sec',lang)}</p>"
           f"<p style='color:#e2e8f0;font-size:.88rem;margin:0 0 4px;'>{fert_timing}</p>"
           f"<p style='color:#e2e8f0;font-size:.88rem;margin:0;'>{irr_advice}</p>")
 
     # ── Weekly outlook chart ───────────────────────────────────────────────────
-    _section("📊 Weekly Farming Outlook")
+    _section(t("weekly_outlook", lang))
     np.random.seed(int(rain*temp) % 999)
     days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
     r7   = np.clip(rain  + np.random.randn(7)*10, 0,100)
@@ -153,14 +150,14 @@ def page_farmer():
     st.plotly_chart(fig, use_container_width=True)
 
     # ── AI Farmer Tips ────────────────────────────────────────────────────────
-    _section("🤖 AI Farmer Tips")
+    _section(t("ai_tips", lang))
     tips = []
-    if rain > 65: tips.append(("⛈️","Ensure drainage channels are clear to prevent waterlogging.","#ef4444"))
-    if moist < 30: tips.append(("🌵","Soil is dry. Apply mulch to retain moisture between irrigation.","#f59e0b"))
-    if temp > 38: tips.append(("🔥","Extreme heat: irrigate at 6am. Avoid afternoon field work.","#f97316"))
-    if 35<=rain<=65 and 35<=moist<=65: tips.append(("🌾","Ideal conditions for sowing. Prepare fields now.","#22c55e"))
-    tips.append(("🧪","Test soil pH before fertilizer application for best yield.","#06b6d4"))
-    tips.append(("📱","Save forecast reports weekly to track seasonal patterns.","#6366f1"))
+    if rain > 65: tips.append(("⛈️", t("tip_flood",lang), "#ef4444"))
+    if moist < 30: tips.append(("🌵", t("tip_dry",  lang), "#f59e0b"))
+    if temp > 38:  tips.append(("🔥", t("tip_heat", lang), "#f97316"))
+    if 35<=rain<=65 and 35<=moist<=65: tips.append(("🌾", t("tip_ideal",lang), "#22c55e"))
+    tips.append(("🧪", t("tip_soil",lang), "#06b6d4"))
+    tips.append(("📱", t("tip_save",lang), "#6366f1"))
     for em,tip,col in tips[:4]:
         _card(f"<p style='margin:0;font-size:.88rem;'>"
               f"<span style='font-size:1.1rem;'>{em}</span> "

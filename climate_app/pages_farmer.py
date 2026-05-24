@@ -184,20 +184,17 @@ def page_dashboard():
 # ─────────────────────────────────────────────────────────────────────────────
 # 🔮 PREDICT WEATHER
 # ─────────────────────────────────────────────────────────────────────────────
-def _rain_category(pct):
-    if pct < 20:  return "☀️ No Rain",        "#22c55e"
-    if pct < 50:  return "🌦️ Light Rain",     "#06b6d4"
-    if pct < 75:  return "🌧️ Moderate Rain",  "#6366f1"
-    return            "⛈️ Heavy Rain",         "#f97316"
+def _rain_category(pct, lang="en"):
+    if pct < 20:  return t("no_rain",   lang), "#22c55e"
+    if pct < 50:  return t("light_rain", lang), "#06b6d4"
+    if pct < 75:  return t("mod_rain",   lang), "#6366f1"
+    return              t("heavy_rain",  lang), "#f97316"
 
-def _crop_advice(rain_pct, temp, region):
-    if rain_pct > 70:
-        return "🌾 Good time to sow paddy / jute. Ensure drainage in fields."
-    if rain_pct > 40:
-        return "🌽 Moderate rain expected. Suitable for maize, soybean sowing."
-    if temp > 38:
-        return "🚿 High heat stress. Irrigate crops early morning. Avoid sowing."
-    return "🌱 Dry conditions. Use drip irrigation. Consider drought-tolerant crops."
+def _crop_advice(rain_pct, temp, region, lang="en"):
+    if rain_pct > 70: return t("crop_high", lang)
+    if rain_pct > 40: return t("crop_mod",  lang)
+    if temp > 38:     return t("crop_heat", lang)
+    return                   t("crop_dry",  lang)
 
 def _ai_explanation(temp, humidity, pressure, wind, cloud, rain_pct):
     reasons = []
@@ -225,25 +222,24 @@ def page_predict():
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        temp     = st.slider("🌡️ Temperature (°C)",   0,  55, 32)
-        humidity = st.slider("💧 Humidity (%)",        0, 100, 65)
-        pressure = st.slider("📊 Pressure (hPa)",    970,1030,1008)
+        temp     = st.slider(t("sl_temp",lang),      0,  55, 32)
+        humidity = st.slider(t("sl_humidity",lang),   0, 100, 65)
+        pressure = st.slider(t("sl_pressure",lang), 970,1030,1008)
     with col2:
-        wind     = st.slider("💨 Wind Speed (km/h)",   0,  80, 18)
-        cloud    = st.slider("☁️ Cloud Cover (%)",      0, 100, 55)
-        month    = st.selectbox("📅 Month", list(range(1,13)),
+        wind     = st.slider(t("sl_wind",lang),       0,  80, 18)
+        cloud    = st.slider(t("sl_cloud",lang),      0, 100, 55)
+        month    = st.selectbox(t("sl_month",lang), list(range(1,13)),
                                 format_func=lambda m: ["Jan","Feb","Mar","Apr","May","Jun",
                                                        "Jul","Aug","Sep","Oct","Nov","Dec"][m-1],
                                 index=5)
     with col3:
-        region   = st.selectbox("🏘️ Region Type",
-                                ["🌾 Rural","🏜️ Desert","🌊 Coastal","⛰️ Mountain"])
+        region   = st.selectbox(t("sl_region",lang),
+                                [t("r_rural",lang) if t("r_rural",lang)!="r_rural" else "🌾 Rural",
+                                 "🏜️ Desert","🌊 Coastal","⛰️ Mountain"])
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown(
             "<div class='glow-card' style='padding:0.8rem;'>"
-            "<p style='color:#94a3b8;font-size:0.8rem;margin:0;'>"
-            "AI uses GraphCast / FourCastNet architecture to predict rainfall probability "
-            "from your local atmospheric conditions.</p></div>",
+            f"<p style='color:#94a3b8;font-size:0.8rem;margin:0;'>{t('ai_info',lang)}</p></div>",
             unsafe_allow_html=True,
         )
 
@@ -287,18 +283,18 @@ def page_predict():
             heat_risk  = min(100, max(0, (temp - 32) * 6))
             storm_risk = min(100, max(0, (wind - 25) * 2 + (100 - pressure + 1013) * 3))
 
-            cat, cat_col = _rain_category(rain_pct)
-            advice       = _crop_advice(rain_pct, temp, region)
+            cat, cat_col = _rain_category(rain_pct, lang)
+            advice       = _crop_advice(rain_pct, temp, region, lang)
             explanation  = _ai_explanation(temp, humidity, pressure, wind, cloud, rain_pct)
 
             # ── R1: Probability gauges ────────────────────────────────────────
             st.markdown("<br>", unsafe_allow_html=True)
-            _section("📊 R1 — Probability Gauges")
+            _section(t("gauge_section", lang))
             g1, g2, g3 = st.columns(3)
             for gcol, label, val, color in [
-                (g1, "🌧️ Rain Probability", rain_pct,  "#6366f1"),
-                (g2, "🔥 Heatwave Risk",    heat_risk, "#f97316"),
-                (g3, "⛈️ Storm Risk",       storm_risk,"#ef4444"),
+                (g1, t("rain_prob",      lang), rain_pct,   "#6366f1"),
+                (g2, t("heat_risk_lbl",  lang), heat_risk,  "#f97316"),
+                (g3, t("storm_risk_lbl", lang), storm_risk, "#ef4444"),
             ]:
                 fig_g = go.Figure(go.Indicator(
                     mode="gauge+number", value=round(val, 1),
@@ -322,13 +318,13 @@ def page_predict():
                 )
                 gcol.plotly_chart(fig_g, use_container_width=True)
 
-            # ── R2: Weather summary cards ─────────────────────────────────────
-            _section("🌤️ R2 — Weather Summary")
+            # ── R2: Weather summary cards
+            _section(t("summary_sec", lang))
             s1, s2, s3, s4 = st.columns(4)
-            s1.metric("🌧️ Rainfall Category", cat)
-            s2.metric("🌡️ Temperature",        f"{temp} °C")
-            s3.metric("💧 Humidity",            f"{humidity}%")
-            s4.metric("💨 Wind Speed",          f"{wind} km/h")
+            s1.metric(t("rain_cat_lbl",lang), cat)
+            s2.metric(t("temp_label",  lang), f"{temp} °C")
+            s3.metric(t("humidity_lbl",lang), f"{humidity}%")
+            s4.metric(t("wind_label",  lang), f"{wind} km/h")
 
             # Progress bars
             st.markdown("<div class='glow-card'>", unsafe_allow_html=True)
@@ -351,7 +347,7 @@ def page_predict():
             st.markdown("</div>", unsafe_allow_html=True)
 
             # ── R3: 7-day forecast ────────────────────────────────────────────
-            _section("📅 R3 — 7-Day Forecast")
+            _section(t("forecast7_sec", lang))
             days = ["Today","Day 2","Day 3","Day 4","Day 5","Day 6","Day 7"]
             np.random.seed(int(temp * humidity) % 1000)
             temps_7     = temp     + np.random.randn(7) * 2
@@ -378,23 +374,18 @@ def page_predict():
             )
             st.plotly_chart(fig7, use_container_width=True)
 
-            # ── R4: AI explanation + crop advice ──────────────────────────────
-            _section("🧠 R4 — AI Explanation")
+            _section(t("ai_explain_sec", lang))
             col_a, col_b = st.columns(2)
             col_a.markdown(
                 f"<div class='glow-card' style='border-color:#6366f155;'>"
-                f"<p style='color:#6366f1;font-weight:700;margin:0 0 6px;'>🧠 AI Reasoning</p>"
+                f"<p style='color:#6366f1;font-weight:700;margin:0 0 6px;'>{t('ai_reasoning',lang)}</p>"
                 f"<p style='color:#e2e8f0;font-size:0.9rem;line-height:1.6;margin:0;'>{explanation}</p>"
-                f"</div>",
-                unsafe_allow_html=True,
-            )
+                f"</div>", unsafe_allow_html=True)
             col_b.markdown(
                 f"<div class='glow-card' style='border-color:#22c55e55;'>"
-                f"<p style='color:#22c55e;font-weight:700;margin:0 0 6px;'>🌾 Crop Advisory</p>"
+                f"<p style='color:#22c55e;font-weight:700;margin:0 0 6px;'>{t('crop_advisory',lang)}</p>"
                 f"<p style='color:#e2e8f0;font-size:0.9rem;line-height:1.6;margin:0;'>{advice}</p>"
-                f"</div>",
-                unsafe_allow_html=True,
-            )
+                f"</div>", unsafe_allow_html=True)
 
             # ── Alert box ─────────────────────────────────────────────────────
             if rain_pct > 75:
