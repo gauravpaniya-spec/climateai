@@ -68,8 +68,9 @@ def page_farmer():
         temp   = st.slider(t("sl_temp", lang),     0,  50, 32)
         season = st.selectbox(t("sl_season", lang), ["Kharif","Rabi","Zaid"])
     with col3:
-        area = st.selectbox(t("sl_region_f", lang) if "sl_region_f" in T else t("sl_region",lang),
+        area = st.selectbox(t("sl_region", lang),
                             ["🌾 Plains","🏔️ Hills","🌊 Coastal","🏜️ Arid"])
+
         st.markdown("<br>",unsafe_allow_html=True)
         analyse = st.button(t("farmer_title", lang), use_container_width=True)
 
