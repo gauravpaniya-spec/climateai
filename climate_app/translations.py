@@ -156,21 +156,83 @@ T = {
                          "🔥 गर्मी चेतावनी! तापमान कम होने तक बुवाई न करें।"),
     "farmer_safe":    _h("✅ Safe Farming Conditions — Good time for field activities.",
                          "✅ सुरक्षित खेती — खेत कार्य के लिए अच्छा समय।"),
-    # About
+    # ── About page full content ───────────────────────────────────────────────
     "about_what":    _h("📖 What does ClimateAI do?",    "📖 ClimateAI क्या करता है?"),
     "about_how":     _h("📱 How to use the app",         "📱 ऐप का उपयोग कैसे करें"),
     "about_ai":      _h("🤖 The AI behind ClimateAI",   "🤖 ClimateAI के पीछे का AI"),
     "about_faq":     _h("❓ Frequently Asked Questions", "❓ अक्सर पूछे जाने वाले प्रश्न"),
     "about_status":  _h("⚡ System Status",              "⚡ सिस्टम स्थिति"),
-    "status_model":  _h("🤖 AI Model",                  "🤖 AI मॉडल"),
-    "status_data":   _h("📡 Weather Data",               "📡 मौसम डेटा"),
-    "status_adv":    _h("🌾 Advisories",                 "🌾 सलाह"),
+    "status_model":  _h("🤖 AI Model",   "🤖 AI मॉडल"),
+    "status_data":   _h("📡 Weather Data","📡 मौसम डेटा"),
+    "status_adv":    _h("🌾 Advisories", "🌾 सलाह"),
     "ready":         _h("✅ Ready",    "✅ तैयार"),
-    "loading":       _h("⏳ Loading", "⏳ लोड हो रहा है"),
-    "loaded":        _h("✅ Loaded",  "✅ लोड हो गया"),
+    "loading":       _h("⏳ Loading",  "⏳ लोड हो रहा है"),
+    "loaded":        _h("✅ Loaded",   "✅ लोड हो गया"),
+    # About — body text
+    "about_what_txt": _h(
+        "ClimateAI uses <b style='color:#6366f1;'>three powerful AI models</b> (FourCastNet, GraphCast, Pangu-Weather) to help you:<br><br>"
+        "🌧️ &nbsp;<b>Predict rain</b> — Know if it will rain before going to the field<br>"
+        "🌡️ &nbsp;<b>Check temperature</b> — Get heatwave warnings in advance<br>"
+        "🌾 &nbsp;<b>Get crop advice</b> — AI tells you the best crop for current weather<br>"
+        "💧 &nbsp;<b>Irrigation planning</b> — Know when to water and when to skip<br>"
+        "⚠️ &nbsp;<b>Extreme weather alerts</b> — Storm, flood, and heatwave warnings",
+        "ClimateAI <b style='color:#6366f1;'>तीन शक्तिशाली AI मॉडल</b> (FourCastNet, GraphCast, Pangu-Weather) का उपयोग करता है:<br><br>"
+        "🌧️ &nbsp;<b>वर्षा का अनुमान</b> — खेत जाने से पहले जानें क्या बारिश होगी<br>"
+        "🌡️ &nbsp;<b>तापमान जांचें</b> — लू की चेतावनी पहले से पाएं<br>"
+        "🌾 &nbsp;<b>फसल सलाह पाएं</b> — AI बताएगा कौनसी फसल बोएं<br>"
+        "💧 &nbsp;<b>सिंचाई योजना</b> — कब पानी देना है, कब नहीं<br>"
+        "⚠️ &nbsp;<b>चरम मौसम चेतावनी</b> — तूफान, बाढ़ और लू की सूचना"
+    ),
+    "about_ai_txt": _h(
+        "ClimateAI uses <b style='color:#8b5cf6;'>FourCastNet</b> (NVIDIA), "
+        "<b style='color:#06b6d4;'>GraphCast</b> (Google DeepMind), and "
+        "<b style='color:#f97316;'>Pangu-Weather</b> (Huawei) — the same AI models used by meteorological agencies worldwide.<br><br>"
+        "These models are <b style='color:#22c55e;'>automatically ready</b> when you open the app. Just use the features!<br><br>"
+        "⚡ The AI reads temperature, humidity, pressure, wind, and cloud cover to predict weather.",
+        "ClimateAI <b style='color:#8b5cf6;'>FourCastNet</b> (NVIDIA), "
+        "<b style='color:#06b6d4;'>GraphCast</b> (Google DeepMind), और "
+        "<b style='color:#f97316;'>Pangu-Weather</b> (Huawei) का उपयोग करता है।<br><br>"
+        "ये मॉडल <b style='color:#22c55e;'>ऐप खुलने पर अपने आप तैयार</b> हो जाते हैं।<br><br>"
+        "⚡ AI तापमान, आर्द्रता, दबाव, हवा और बादल से मौसम का अनुमान लगाता है।"
+    ),
+    # About — steps
+    "step1_title": _h("🏠 Dashboard",       "🏠 मुख्य पृष्ठ"),
+    "step1_desc":  _h("See today's weather overview and India weather map",
+                      "आज का मौसम और भारत का मौसम मानचित्र देखें"),
+    "step2_title": _h("🔮 Predict Weather", "🔮 मौसम अनुमान"),
+    "step2_desc":  _h("Enter local conditions → get rain & risk forecast",
+                      "स्थानीय जानकारी दर्ज करें → वर्षा और जोखिम अनुमान पाएं"),
+    "step3_title": _h("🌾 Farmer Advisory","🌾 किसान सलाह"),
+    "step3_desc":  _h("Enter field conditions → get crop & irrigation advice",
+                      "खेत की जानकारी दर्ज करें → फसल और सिंचाई सलाह पाएं"),
+    "step4_title": _h("ℹ️ About",          "ℹ️ जानकारी"),
+    "step4_desc":  _h("This page — learn what ClimateAI does",
+                      "यह पृष्ठ — ClimateAI के बारे में जानें"),
+    # About — FAQ
+    "faq1_q": _h("🌧️ How accurate is the rain prediction?",
+                 "🌧️ वर्षा अनुमान कितना सटीक है?"),
+    "faq1_a": _h("Rain prediction is **62–91% accurate** for 6-hour forecasts and ~70% for 24-hour. Always combine with local observation.",
+                 "6 घंटे के लिए **62–91% सटीक**, 24 घंटे के लिए ~70%। स्थानीय अवलोकन के साथ मिलाकर उपयोग करें।"),
+    "faq2_q": _h("📱 Do I need internet to use ClimateAI?",
+                 "📱 क्या इंटरनेट जरूरी है?"),
+    "faq2_a": _h("After the first load, ClimateAI works **offline**.",
+                 "पहली लोड के बाद ClimateAI **ऑफलाइन** काम करता है।"),
+    "faq3_q": _h("🌾 Which crops does ClimateAI recommend?",
+                 "🌾 कौन सी फसलें सुझाई जाती हैं?"),
+    "faq3_a": _h("Paddy, Wheat, Maize, Millets, Mustard, Watermelon — based on weather & soil conditions.",
+                 "धान, गेहूं, मक्का, बाजरा, सरसों, तरबूज — मौसम और मिट्टी के आधार पर।"),
+    "faq4_q": _h("⚠️ What is a heatwave warning?",
+                 "⚠️ लू चेतावनी क्या है?"),
+    "faq4_a": _h("When temperature exceeds **38°C** — irrigate early morning, avoid afternoon fieldwork.",
+                 "जब तापमान **38°C** से ऊपर हो — सुबह सिंचाई करें, दोपहर खेत न जाएं।"),
+    "faq5_q": _h("📥 Can I download my forecast?",
+                 "📥 रिपोर्ट डाउनलोड हो सकती है?"),
+    "faq5_a": _h("Yes! On the **🔮 Predict Weather** page, click **📥 Download Forecast Report**.",
+                 "हां! **🔮 मौसम अनुमान** पृष्ठ पर **📥 रिपोर्ट डाउनलोड करें** बटन दबाएं।"),
 }
 
 
 def t(key: str, lang: str = "en") -> str:
     """Get translation for key in given language. Fallback to English."""
     return T.get(key, {}).get(lang) or T.get(key, {}).get("en", key)
+
