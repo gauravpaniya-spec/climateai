@@ -79,8 +79,10 @@ T = {
     "risk_danger":   _h("🔴 Danger",    "🔴 खतरा"),
     "risk_caution":  _h("🟡 Caution",   "🟡 सावधानी"),
     "risk_safe":     _h("🟢 Safe",       "🟢 सुरक्षित"),
-                         "AI आपकी स्थानीय परिस्थितियों से वर्षा संभावना की गणना करता है।"),
+    "ai_info":       _h("AI uses GraphCast / FourCastNet to predict rainfall probability.",
+                        "AI आपकी स्थानीय परिस्थितियों से वर्षा संभावना की गणना करता है।"),
     "gauge_section":  _h("📊 Probability Gauges",   "📊 संभावना गेज"),
+
     "rain_prob":      _h("🌧️ Rain Probability",     "🌧️ वर्षा संभावना"),
     "heat_risk_lbl":  _h("🔥 Heatwave Risk",        "🔥 लू का खतरा"),
     "storm_risk_lbl": _h("⛈️ Storm Risk",           "⛈️ तूफान का खतरा"),
