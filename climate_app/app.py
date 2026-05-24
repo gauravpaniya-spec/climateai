@@ -203,13 +203,8 @@ st.markdown(
 
 page=st.session_state.page
 
-def section(t): st.markdown(f"<div class='section-header'>{t}</div>",unsafe_allow_html=True)
-def pulse(txt): st.markdown(f"<span class='pulse-loader'></span>"
-                             f"<span class='pulse-text'>{txt}</span>",unsafe_allow_html=True)
+def section(title): st.markdown(f"<div class='section-header'>{title}</div>",unsafe_allow_html=True)
 
-# ════════════════════════════════════════════════════════════════════════════
-# 4 user-friendly pages — Train & Evaluation run silently in backend
-# ════════════════════════════════════════════════════════════════════════════
 if page=="🏠 Dashboard":
     from pages_farmer import page_dashboard; page_dashboard()
 
@@ -221,92 +216,131 @@ elif page=="🌾 Farmer Advisory":
 
 elif page=="ℹ️ About":
     import pandas as pd
+    lang = st.session_state.get("lang", "en")
 
-    # Simple hero
-    st.markdown("""
+    # Hero
+    st.markdown(f"""
     <div class='glow-card' style='text-align:center;padding:2rem;border-color:#6366f155;'>
     <p style='font-size:3rem;margin:0;'>🌍</p>
-    <p style='color:#e2e8f0;font-size:1.2rem;font-weight:700;margin:8px 0 4px;'>ClimateAI Assistant</p>
-    <p style='color:#94a3b8;font-size:.9rem;margin:0;'>AI-powered weather forecasting for farmers and villages</p>
-    <p style='color:#6366f1;font-size:.8rem;margin:6px 0 0;'>किसानों और गांवों के लिए AI मौसम पूर्वानुमान</p>
+    <p style='color:#e2e8f0;font-size:1.2rem;font-weight:700;margin:8px 0 4px;'>{t('app_title', lang)}</p>
+    <p style='color:#94a3b8;font-size:.9rem;margin:0;'>{t('app_subtitle', lang)}</p>
     </div>""", unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    section("📖 What does ClimateAI do?")
-    st.markdown("""
-    <div class='glow-card'>
-    <p style='color:#e2e8f0;font-size:.92rem;line-height:1.9;margin:0;'>
-    ClimateAI uses <b style='color:#6366f1;'>three powerful AI models</b> (FourCastNet, GraphCast, Pangu-Weather)
-    trained on global weather data to help you:<br><br>
-    🌧️ &nbsp;<b>Predict rain</b> — Know if it will rain before going to the field<br>
-    🌡️ &nbsp;<b>Check temperature</b> — Get heatwave warnings in advance<br>
-    🌾 &nbsp;<b>Get crop advice</b> — AI tells you the best crop for current weather<br>
-    💧 &nbsp;<b>Irrigation planning</b> — Know when to water and when to skip<br>
-    ⚠️ &nbsp;<b>Extreme weather alerts</b> — Storm, flood, and heatwave warnings
-    </p></div>""", unsafe_allow_html=True)
+
+    # What does ClimateAI do
+    section(t("about_what", lang))
+    if lang == "hi":
+        about_txt = """ClimateAI <b style='color:#6366f1;'>तीन शक्तिशाली AI मॉडल</b> (FourCastNet, GraphCast, Pangu-Weather)
+        का उपयोग करता है जो आपकी मदद करते हैं:<br><br>
+        🌧️ &nbsp;<b>वर्षा का अनुमान</b> — खेत जाने से पहले जानें क्या बारिश होगी<br>
+        🌡️ &nbsp;<b>तापमान जांचें</b> — लू की चेतावनी पहले से पाएं<br>
+        🌾 &nbsp;<b>फसल सलाह पाएं</b> — AI बताएगा कौनसी फसल बोएं<br>
+        💧 &nbsp;<b>सिंचाई योजना</b> — कब पानी देना है, कब नहीं<br>
+        ⚠️ &nbsp;<b>चरम मौसम चेतावनी</b> — तूफान, बाढ़ और लू की सूचना"""
+    else:
+        about_txt = """ClimateAI uses <b style='color:#6366f1;'>three powerful AI models</b> (FourCastNet, GraphCast, Pangu-Weather)
+        to help you:<br><br>
+        🌧️ &nbsp;<b>Predict rain</b> — Know if it will rain before going to the field<br>
+        🌡️ &nbsp;<b>Check temperature</b> — Get heatwave warnings in advance<br>
+        🌾 &nbsp;<b>Get crop advice</b> — AI tells you the best crop for current weather<br>
+        💧 &nbsp;<b>Irrigation planning</b> — Know when to water and when to skip<br>
+        ⚠️ &nbsp;<b>Extreme weather alerts</b> — Storm, flood, and heatwave warnings"""
+    st.markdown(f"<div class='glow-card'><p style='color:#e2e8f0;font-size:.92rem;line-height:1.9;margin:0;'>{about_txt}</p></div>",
+                unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    section("📱 How to use the app")
-    steps = [
-        ("🏠","Dashboard",      "See today's weather overview and India weather map"),
-        ("🔮","Predict Weather","Enter your local conditions → get rain & risk forecast"),
-        ("🌾","Farmer Advisory","Enter field conditions → get crop & irrigation advice"),
-        ("ℹ️","About",          "This page — learn what ClimateAI does"),
-    ]
+
+    # How to use
+    section(t("about_how", lang))
+    if lang == "hi":
+        steps = [
+            ("🏠", "मुख्य पृष्ठ",       "आज का मौसम और भारत का मौसम मानचित्र देखें"),
+            ("🔮", "मौसम अनुमान",       "स्थानीय जानकारी दर्ज करें → वर्षा और जोखिम अनुमान पाएं"),
+            ("🌾", "किसान सलाह",        "खेत की जानकारी दर्ज करें → फसल और सिंचाई सलाह पाएं"),
+            ("ℹ️", "जानकारी",           "यह पृष्ठ — ClimateAI के बारे में जानें"),
+        ]
+    else:
+        steps = [
+            ("🏠","Dashboard",       "See today's weather overview and India weather map"),
+            ("🔮","Predict Weather", "Enter local conditions → get rain & risk forecast"),
+            ("🌾","Farmer Advisory", "Enter field conditions → get crop & irrigation advice"),
+            ("ℹ️","About",           "This page — learn what ClimateAI does"),
+        ]
     for em, pg, desc in steps:
         st.markdown(
-            f"<div class='glow-card' style='padding:.8rem 1.1rem;display:flex;"
-            f"align-items:center;gap:12px;'>"
+            f"<div class='glow-card' style='padding:.8rem 1.1rem;display:flex;align-items:center;gap:12px;'>"
             f"<span style='font-size:1.4rem;'>{em}</span>"
             f"<div><p style='color:#6366f1;font-weight:700;font-size:.88rem;margin:0;'>{pg}</p>"
             f"<p style='color:#94a3b8;font-size:.8rem;margin:0;'>{desc}</p></div></div>",
             unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    section("🤖 The AI behind ClimateAI")
-    st.markdown("""
-    <div class='glow-card'>
-    <p style='color:#94a3b8;font-size:.85rem;line-height:1.9;margin:0;'>
-    ClimateAI uses <b style='color:#8b5cf6;'>FourCastNet</b> (by NVIDIA),
-    <b style='color:#06b6d4;'>GraphCast</b> (by Google DeepMind), and
-    <b style='color:#f97316;'>Pangu-Weather</b> (by Huawei) — the same AI models used by
-    meteorological agencies worldwide.<br><br>
-    These models are <b style='color:#22c55e;'>automatically trained</b> when you open the app.
-    You don't need to do anything — just use the features!<br><br>
-    ⚡ The AI reads temperature, humidity, pressure, wind, and cloud cover
-    to predict what the weather will do next.
-    </p></div>""", unsafe_allow_html=True)
+
+    # AI behind ClimateAI
+    section(t("about_ai", lang))
+    if lang == "hi":
+        ai_txt = """ClimateAI <b style='color:#8b5cf6;'>FourCastNet</b> (NVIDIA),
+        <b style='color:#06b6d4;'>GraphCast</b> (Google DeepMind), और
+        <b style='color:#f97316;'>Pangu-Weather</b> (Huawei) का उपयोग करता है — वही AI मॉडल जो
+        दुनिया भर की मौसम एजेंसियां इस्तेमाल करती हैं।<br><br>
+        ये मॉडल <b style='color:#22c55e;'>ऐप खुलने पर अपने आप तैयार</b> हो जाते हैं।
+        आपको कुछ नहीं करना — बस features का उपयोग करें!<br><br>
+        ⚡ AI तापमान, आर्द्रता, दबाव, हवा और बादल से मौसम का अनुमान लगाता है।"""
+    else:
+        ai_txt = """ClimateAI uses <b style='color:#8b5cf6;'>FourCastNet</b> (by NVIDIA),
+        <b style='color:#06b6d4;'>GraphCast</b> (by Google DeepMind), and
+        <b style='color:#f97316;'>Pangu-Weather</b> (by Huawei) — the same AI models used by
+        meteorological agencies worldwide.<br><br>
+        These models are <b style='color:#22c55e;'>automatically ready</b> when you open the app.
+        You don't need to do anything — just use the features!<br><br>
+        ⚡ The AI reads temperature, humidity, pressure, wind, and cloud cover to predict weather."""
+    st.markdown(f"<div class='glow-card'><p style='color:#94a3b8;font-size:.85rem;line-height:1.9;margin:0;'>{ai_txt}</p></div>",
+                unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    section("❓ Frequently Asked Questions")
-    with st.expander("🌧️ How accurate is the rain prediction?"):
-        st.markdown("Rain prediction is **62–91% accurate** for 6-hour forecasts and "
-                    "around 70% for 24-hour forecasts. Accuracy drops for 72-hour predictions. "
-                    "Always combine with local observation for best results.")
-    with st.expander("📱 Do I need internet to use ClimateAI?"):
-        st.markdown("After the first load, ClimateAI works **offline**. "
-                    "The AI models run locally on your device — no data is sent to any server.")
-    with st.expander("🌾 Which crops does ClimateAI recommend?"):
-        st.markdown("ClimateAI suggests crops based on predicted rainfall, soil moisture, "
-                    "temperature, and season (Kharif/Rabi/Zaid). Examples: Paddy, Wheat, "
-                    "Maize, Millets, Mustard, Watermelon — and many more based on conditions.")
-    with st.expander("⚠️ What is a heatwave warning?"):
-        st.markdown("When temperature exceeds **38°C**, ClimateAI shows a red heatwave warning. "
-                    "This means: irrigate early morning, avoid afternoon fieldwork, and give "
-                    "livestock extra water.")
-    with st.expander("📥 Can I download my forecast?"):
-        st.markdown("Yes! On the **🔮 Predict Weather** page, after getting a forecast, "
-                    "click **📥 Download Forecast Report** to save a JSON file with all results.")
 
-    # AI status card
+    # FAQ
+    section(t("about_faq", lang))
+    if lang == "hi":
+        faqs = [
+            ("🌧️ वर्षा अनुमान कितना सटीक है?",
+             "6 घंटे के लिए **62–91% सटीक**, 24 घंटे के लिए ~70%। स्थानीय अवलोकन के साथ मिलाकर उपयोग करें।"),
+            ("📱 क्या इंटरनेट जरूरी है?",
+             "पहली लोड के बाद ClimateAI **ऑफलाइन** काम करता है।"),
+            ("🌾 कौन सी फसलें सुझाई जाती हैं?",
+             "धान, गेहूं, मक्का, बाजरा, सरसों, तरबूज — मौसम और मिट्टी के आधार पर।"),
+            ("⚠️ लू चेतावनी क्या है?",
+             "जब तापमान **38°C** से ऊपर हो — सुबह सिंचाई करें, दोपहर खेत न जाएं।"),
+            ("📥 रिपोर्ट डाउनलोड हो सकती है?",
+             "हां! **🔮 मौसम अनुमान** पृष्ठ पर **📥 रिपोर्ट डाउनलोड करें** बटन दबाएं।"),
+        ]
+    else:
+        faqs = [
+            ("🌧️ How accurate is the rain prediction?",
+             "Rain prediction is **62–91% accurate** for 6-hour forecasts and ~70% for 24-hour."),
+            ("📱 Do I need internet to use ClimateAI?",
+             "After the first load, ClimateAI works **offline**."),
+            ("🌾 Which crops does ClimateAI recommend?",
+             "Paddy, Wheat, Maize, Millets, Mustard, Watermelon — based on conditions."),
+            ("⚠️ What is a heatwave warning?",
+             "When temperature exceeds **38°C** — irrigate early morning, avoid afternoon fieldwork."),
+            ("📥 Can I download my forecast?",
+             "Yes! On the **🔮 Predict Weather** page, click **📥 Download Forecast Report**."),
+        ]
+    for q, a in faqs:
+        with st.expander(q):
+            st.markdown(a)
+
+    # System Status
     st.markdown("<br>", unsafe_allow_html=True)
-    section("⚡ System Status")
+    section(t("about_status", lang))
     model_ready = "trained_model" in st.session_state
     data_ready  = "ds" in st.session_state
     s1, s2, s3 = st.columns(3)
-    s1.metric("🤖 AI Model",   "✅ Ready" if model_ready else "⏳ Loading")
-    s2.metric("📡 Weather Data","✅ Loaded" if data_ready  else "⏳ Loading")
-    s3.metric("🌾 Advisories",  str(len(st.session_state.get("advisory_reports",[]))))
+    s1.metric(t("status_model", lang), t("ready",lang) if model_ready else t("loading",lang))
+    s2.metric(t("status_data",  lang), t("loaded",lang) if data_ready  else t("loading",lang))
+    s3.metric(t("status_adv",   lang), str(len(st.session_state.get("advisory_reports",[]))))
 
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.markdown("<br><br>", unsafe_allow_html=True)
