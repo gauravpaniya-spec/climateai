@@ -4,8 +4,15 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
-import torch, sys, os
+import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
+
+try:
+    import torch
+    TORCH_OK = True
+except ImportError:
+    TORCH_OK = False
+
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 def _section(t): st.markdown(f"<div class='section-header'>{t}</div>",unsafe_allow_html=True)
