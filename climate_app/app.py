@@ -156,9 +156,10 @@ with st.sidebar:
         "background:linear-gradient(135deg,#6366f1,#06b6d4);"
         "-webkit-background-clip:text;-webkit-text-fill-color:transparent;"
         "background-clip:text;margin-bottom:2px;'>🌍 ClimateAI</p>"
-        "<p style='color:#475569;font-size:.7rem;letter-spacing:.05em;"
-        "margin-bottom:1rem;'>AI Weather Assistant for Farmers</p>",
+        f"<p style='color:#475569;font-size:.7rem;letter-spacing:.05em;"
+        f"margin-bottom:1rem;'>{t('sidebar_sub', lang)}</p>",
         unsafe_allow_html=True)
+
 
     # Nav buttons in selected language
     NAV = [

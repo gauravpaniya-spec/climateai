@@ -329,10 +329,10 @@ def page_predict():
             # Progress bars
             st.markdown("<div class='glow-card'>", unsafe_allow_html=True)
             for label, val, color in [
-                ("🌧️ Rain Probability", rain_pct, "#6366f1"),
-                ("🔥 Heatwave Risk",    heat_risk, "#f97316"),
-                ("⛈️ Storm Risk",       storm_risk, "#ef4444"),
-                ("☁️ Cloud Cover",      cloud,     "#94a3b8"),
+                (t("rain_prob",      lang), rain_pct,  "#6366f1"),
+                (t("heat_risk_lbl",  lang), heat_risk, "#f97316"),
+                (t("storm_risk_lbl", lang), storm_risk,"#ef4444"),
+                (t("cloud_cover",    lang), cloud,     "#94a3b8"),
             ]:
                 st.markdown(
                     f"<div style='margin-bottom:12px;'>"

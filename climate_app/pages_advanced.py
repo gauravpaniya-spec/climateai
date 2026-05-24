@@ -35,11 +35,11 @@ def _badge(label, val, color):
 # 🌾 FARMER ADVISORY
 # ─────────────────────────────────────────────────────────────────────────────
 CROPS = {
-    ("high","wet","hot","Kharif"):  ("🌾 Paddy / Jute",  "#22c55e","✅ Excellent"),
-    ("high","wet","warm","Kharif"): ("🌽 Maize / Soybean","#22c55e","✅ Good"),
-    ("mod", "dry","warm","Rabi"):   ("🌾 Wheat / Mustard","#06b6d4","✅ Good"),
-    ("low", "dry","hot","Rabi"):    ("🌵 Millets / Gram", "#f59e0b","⚠️ Caution"),
-    ("low", "dry","hot","Zaid"):    ("🍉 Watermelon / Cucumber","#f59e0b","⚠️ Use irrigation"),
+    ("high","wet","hot","Kharif"):  ("🌾 Paddy / Jute",   "#22c55e", "status_exc"),
+    ("high","wet","warm","Kharif"): ("🌽 Maize / Soybean", "#22c55e", "status_good"),
+    ("mod", "dry","warm","Rabi"):   ("🌾 Wheat / Mustard", "#06b6d4", "status_good"),
+    ("low", "dry","hot","Rabi"):    ("🌵 Millets / Gram",  "#f59e0b", "status_caut"),
+    ("low", "dry","hot","Zaid"):    ("🍉 Watermelon / Cucumber","#f59e0b","status_irr"),
 }
 
 def _get_crop(rain, moist, temp, season):
@@ -47,14 +47,13 @@ def _get_crop(rain, moist, temp, season):
     mcat  = "wet"  if moist>55 else "dry"
     tcat  = "hot"  if temp>35  else "warm"
     key   = (rcat, mcat, tcat, season)
-    return CROPS.get(key, ("🌱 Mixed vegetables / Pulses","#94a3b8","ℹ️ General"))
+    return CROPS.get(key, ("🌱 Mixed Vegetables / Pulses","#94a3b8","status_gen"))
 
 def page_farmer():
     lang = st.session_state.get("lang", "en")
-    st.markdown("""<div class='banner'><span class='banner-text'>
-    🌾 Smart Farmer Advisory &nbsp;|&nbsp;
-    <span>AI-powered crop &amp; irrigation guidance</span></span></div>""",
-    unsafe_allow_html=True)
+    st.markdown(f"""<div class='banner'><span class='banner-text'>
+    {t('farmer_banner', lang)}
+    </span></div>""", unsafe_allow_html=True)
 
     with st.expander(t("farmer_how", lang)):
         st.markdown(t("farmer_how_txt", lang))
@@ -76,16 +75,16 @@ def page_farmer():
 
     if not analyse: return
 
-    crop, crop_col, crop_status = _get_crop(rain, moist, temp, season)
+    crop, crop_col, crop_status_key = _get_crop(rain, moist, temp, season)
     flood_risk = min(100, rain*0.8 + moist*0.3)
     heat_risk  = min(100, max(0,(temp-32)*6))
     irr_need   = max(0,70-moist) * 0.5
+    crop_status = t(crop_status_key, lang)
 
-    # ── Status badges ─────────────────────────────────────────────────────────
     flood_col = "#ef4444" if flood_risk>65 else ("#f59e0b" if flood_risk>35 else "#22c55e")
     heat_col  = "#ef4444" if heat_risk>65  else ("#f59e0b" if heat_risk>35  else "#22c55e")
-    flood_lbl = "🔴 Danger" if flood_risk>65 else ("🟡 Caution" if flood_risk>35 else "🟢 Safe")
-    heat_lbl  = "🔴 Danger" if heat_risk>65  else ("🟡 Caution" if heat_risk>35  else "🟢 Safe")
+    flood_lbl = t("risk_danger",lang) if flood_risk>65 else (t("risk_caution",lang) if flood_risk>35 else t("risk_safe",lang))
+    heat_lbl  = t("risk_danger",lang) if heat_risk>65  else (t("risk_caution",lang) if heat_risk>35  else t("risk_safe",lang))
 
     # Animated alerts
     if flood_risk > 65:
