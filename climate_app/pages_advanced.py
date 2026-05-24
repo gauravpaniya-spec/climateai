@@ -13,9 +13,14 @@ try:
 except ImportError:
     TORCH_OK = False
 
+try:
+    from translations import t
+except ImportError:
+    def t(key, lang="en"): return key
 
 # ── helpers ───────────────────────────────────────────────────────────────────
-def _section(t): st.markdown(f"<div class='section-header'>{t}</div>",unsafe_allow_html=True)
+def _section(title): st.markdown(f"<div class='section-header'>{title}</div>",unsafe_allow_html=True)
+
 
 def _card(html, border="#6366f1", extra=""):
     st.markdown(f"<div class='glow-card' style='border-color:{border}55;{extra}'>{html}</div>",
@@ -45,9 +50,10 @@ def _get_crop(rain, moist, temp, season):
     return CROPS.get(key, ("🌱 Mixed vegetables / Pulses","#94a3b8","ℹ️ General"))
 
 def page_farmer():
+    lang = st.session_state.get("lang", "en")
     st.markdown("""<div class='banner'><span class='banner-text'>
     🌾 Smart Farmer Advisory &nbsp;|&nbsp;
-    <span>AI-powered crop & irrigation guidance</span></span></div>""",
+    <span>AI-powered crop &amp; irrigation guidance</span></span></div>""",
     unsafe_allow_html=True)
 
     with st.expander("ℹ️ How to use this page"):
@@ -66,7 +72,7 @@ def page_farmer():
     with col3:
         area  = st.selectbox("🏘️ Region",["🌾 Plains","🏔️ Hills","🌊 Coastal","🏜️ Arid"])
         st.markdown("<br>",unsafe_allow_html=True)
-        analyse = st.button("🌾 Get Farming Advisory",use_container_width=True)
+        analyse = st.button(t("farmer_title", lang), use_container_width=True)
 
     if not analyse: return
 
@@ -83,36 +89,36 @@ def page_farmer():
 
     # Animated alerts
     if flood_risk > 65:
-        st.error("⛈️ **Flood Warning!** High rainfall + saturated soil. Move livestock to high ground.")
+        st.error(t("flood_warn", lang))
     if heat_risk > 65:
-        st.error("🔥 **Heat Stress Warning!** Irrigate early morning. Do not sow until temperature drops.")
+        st.error(t("heat_warn", lang))
     if flood_risk < 35 and heat_risk < 35:
-        st.success("✅ **Safe Farming Conditions** — Good time for field activities.")
+        st.success(t("safe", lang))
 
     # ── 4 Output cards ────────────────────────────────────────────────────────
     _section("📋 Advisory Results")
     r1,r2,r3,r4 = st.columns(4)
     r1.markdown(f"<div class='glow-card' style='border-color:{crop_col}55;text-align:center;'>"
                 f"<p style='font-size:1.4rem;margin:0;'>🌱</p>"
-                f"<p style='color:{crop_col};font-weight:700;font-size:.85rem;margin:4px 0 2px;'>Best Crop</p>"
+                f"<p style='color:{crop_col};font-weight:700;font-size:.85rem;margin:4px 0 2px;'>{t('best_crop',lang)}</p>"
                 f"<p style='color:#e2e8f0;font-size:.8rem;margin:0;'>{crop}</p>"
                 f"<p style='color:{crop_col};font-size:.72rem;'>{crop_status}</p></div>",
                 unsafe_allow_html=True)
     r2.markdown(f"<div class='glow-card' style='border-color:#06b6d455;text-align:center;'>"
                 f"<p style='font-size:1.4rem;margin:0;'>💧</p>"
-                f"<p style='color:#06b6d4;font-weight:700;font-size:.85rem;margin:4px 0 2px;'>Irrigation Need</p>"
+                f"<p style='color:#06b6d4;font-weight:700;font-size:.85rem;margin:4px 0 2px;'>{t('irr_need',lang)}</p>"
                 f"<p style='color:#e2e8f0;font-size:.8rem;'>{irr_need:.0f} mm/day</p>"
                 f"<p style='color:#06b6d4;font-size:.72rem;'>{'Irrigate today' if irr_need>15 else 'Rain sufficient'}</p></div>",
                 unsafe_allow_html=True)
     r3.markdown(f"<div class='glow-card' style='border-color:{flood_col}55;text-align:center;'>"
                 f"<p style='font-size:1.4rem;margin:0;'>🌊</p>"
-                f"<p style='color:{flood_col};font-weight:700;font-size:.85rem;margin:4px 0 2px;'>Flood Risk</p>"
+                f"<p style='color:{flood_col};font-weight:700;font-size:.85rem;margin:4px 0 2px;'>{t('flood_risk',lang)}</p>"
                 f"<p style='color:#e2e8f0;font-size:.8rem;'>{flood_risk:.0f}%</p>"
                 f"<p style='color:{flood_col};font-size:.72rem;'>{flood_lbl}</p></div>",
                 unsafe_allow_html=True)
     r4.markdown(f"<div class='glow-card' style='border-color:{heat_col}55;text-align:center;'>"
                 f"<p style='font-size:1.4rem;margin:0;'>🔥</p>"
-                f"<p style='color:{heat_col};font-weight:700;font-size:.85rem;margin:4px 0 2px;'>Heat Stress</p>"
+                f"<p style='color:{heat_col};font-weight:700;font-size:.85rem;margin:4px 0 2px;'>{t('heat_stress',lang)}</p>"
                 f"<p style='color:#e2e8f0;font-size:.8rem;'>{heat_risk:.0f}%</p>"
                 f"<p style='color:{heat_col};font-size:.72rem;'>{heat_lbl}</p></div>",
                 unsafe_allow_html=True)

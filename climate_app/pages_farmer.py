@@ -14,6 +14,10 @@ except ImportError:
     TORCH_OK = False
 from io import StringIO
 import json
+try:
+    from translations import t
+except ImportError:
+    def t(key, lang="en"): return key
 
 # ── colour helpers ────────────────────────────────────────────────────────────
 ACC1, ACC2, CARD = "#6366f1", "#06b6d4", "#111827"
@@ -89,25 +93,25 @@ CITIES = pd.DataFrame({
 def page_dashboard():
     _ensure_data()
     _ensure_model()
+    lang = st.session_state.get("lang", "en")
 
     # ── Hero banner ───────────────────────────────────────────────────────────
-    st.markdown("""
+    st.markdown(f"""
     <div style='background:linear-gradient(135deg,rgba(99,102,241,0.22),rgba(6,182,212,0.14));
     border:1px solid rgba(99,102,241,0.4);border-radius:18px;padding:2rem 2.5rem;
     animation:bannerGlow 3s ease-in-out infinite;margin-bottom:1.5rem;'>
-    <h1 class='climate-title'>🌍 ClimateAI Assistant</h1>
+    <h1 class='climate-title'>🌍 {t('app_title', lang)}</h1>
     <p style='color:#94a3b8;font-size:1.05rem;margin:0.4rem 0 0;font-weight:400;'>
-    AI-powered rain forecasting for farmers and villages<br>
-    <span style='color:#6366f1;font-size:0.85rem;'>किसानों और गांवों के लिए AI वर्षा पूर्वानुमान</span>
+    {t('app_subtitle', lang)}
     </p></div>""", unsafe_allow_html=True)
 
     # ── 4 Metric cards ────────────────────────────────────────────────────────
-    _section("📡 Live Weather Snapshot")
+    _section(t("live_snapshot", lang))
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("🌡️ Temperature", "34 °C",   delta="+2°C",  delta_color="inverse")
-    c2.metric("🌧️ Rain Probability", "62%",  delta="+12%", delta_color="normal")
-    c3.metric("💨 Wind Speed",  "18 km/h", delta="-3",    delta_color="normal")
-    c4.metric("🧠 AI Model",   "Ready ✅", delta="FourCastNet")
+    c1.metric(t("temp_label", lang),  "34 °C",   delta="+2°C",  delta_color="inverse")
+    c2.metric(t("rain_label", lang),  "62%",     delta="+12%", delta_color="normal")
+    c3.metric(t("wind_label", lang),  "18 km/h", delta="-3",   delta_color="normal")
+    c4.metric(t("ai_status",  lang),  "Ready ✅", delta="FourCastNet")
 
     # ── Alert ticker ──────────────────────────────────────────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
@@ -208,6 +212,7 @@ def _ai_explanation(temp, humidity, pressure, wind, cloud, rain_pct):
 
 def page_predict():
     _ensure_model()
+    lang = st.session_state.get("lang", "en")
 
     st.markdown("""
     <div class='banner'>
@@ -216,7 +221,7 @@ def page_predict():
     </span></div>""", unsafe_allow_html=True)
 
     # ── Input form ────────────────────────────────────────────────────────────
-    _section("📋 Enter Your Local Weather Conditions")
+    _section(t("predict_title", lang))
 
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -243,7 +248,7 @@ def page_predict():
         )
 
     st.markdown("<br>", unsafe_allow_html=True)
-    predict_btn = st.button("🔮 Predict Weather", use_container_width=True)
+    predict_btn = st.button(t("predict_btn", lang), use_container_width=True)
 
     if predict_btn:
         try:
@@ -393,13 +398,13 @@ def page_predict():
 
             # ── Alert box ─────────────────────────────────────────────────────
             if rain_pct > 75:
-                st.warning(f"⛈️ **Heavy Rain Alert** — {cat}. Secure crops and avoid field work.")
+                st.warning(t("flood_warn", lang))
             elif heat_risk > 60:
-                st.error("🔥 **Heatwave Risk** — Temperature dangerously high. Irrigate fields.")
+                st.error(t("heat_warn", lang))
             elif storm_risk > 50:
-                st.error("⛈️ **Storm Risk** — Strong winds expected. Protect greenhouse crops.")
+                st.error("⛈️ Storm Risk — Strong winds expected. Protect greenhouse crops.")
             else:
-                st.success("✅ **Safe Conditions** — Weather is suitable for farming activities.")
+                st.success(t("safe", lang))
 
             # ── Download report ───────────────────────────────────────────────
             st.markdown("<br>", unsafe_allow_html=True)
@@ -420,7 +425,7 @@ def page_predict():
                 }
             }
             st.download_button(
-                label="📥 Download Forecast Report (JSON)",
+                label=t("download", lang),
                 data=json.dumps(report, indent=2),
                 file_name="climateai_forecast.json",
                 mime="application/json",

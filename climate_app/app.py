@@ -137,6 +137,20 @@ _ensure_all()
 PAGES=["🏠 Dashboard","🔮 Predict Weather","🌾 Farmer Advisory","ℹ️ About"]
 
 with st.sidebar:
+    # ── Language selector (FIRST thing user sees) ──────────────────────────
+    from translations import LANGUAGES
+    lang_label = st.selectbox(
+        "🌐 Language / भाषा",
+        list(LANGUAGES.keys()),
+        index=0,
+        key="lang_select"
+    )
+    st.session_state["lang"] = LANGUAGES[lang_label]
+    lang = st.session_state["lang"]
+
+    st.markdown("<hr style='border-color:#1e293b;margin:.5rem 0;'>", unsafe_allow_html=True)
+
+    from translations import t
     st.markdown(
         "<p style='font-size:1.25rem;font-weight:900;"
         "background:linear-gradient(135deg,#6366f1,#06b6d4);"
@@ -145,11 +159,19 @@ with st.sidebar:
         "<p style='color:#475569;font-size:.7rem;letter-spacing:.05em;"
         "margin-bottom:1rem;'>AI Weather Assistant for Farmers</p>",
         unsafe_allow_html=True)
-    for p in PAGES:
-        if st.button(p,key=f"nav_{p}",use_container_width=True):
-            st.session_state.page=p; st.rerun()
-    st.markdown("<hr style='border-color:#1e293b;margin:.7rem 0;'>",unsafe_allow_html=True)
-    # Simple status — friendly for all users
+
+    # Nav buttons in selected language
+    NAV = [
+        ("🏠 Dashboard",        t("nav_dashboard", lang)),
+        ("🔮 Predict Weather",  t("nav_predict",   lang)),
+        ("🌾 Farmer Advisory",  t("nav_farmer",    lang)),
+        ("ℹ️ About",            t("nav_about",     lang)),
+    ]
+    for page_key, page_label in NAV:
+        if st.button(page_label, key=f"nav_{page_key}", use_container_width=True):
+            st.session_state.page = page_key; st.rerun()
+
+    st.markdown("<hr style='border-color:#1e293b;margin:.7rem 0;'>", unsafe_allow_html=True)
     model_ready = "trained_model" in st.session_state
     fc  = st.session_state.get("forecast_data")
     adv = len(st.session_state.get("advisory_reports",[]))
@@ -159,10 +181,12 @@ with st.sidebar:
         f"🔮 <b style='color:#06b6d4;'>Last Forecast:</b> {'✅ Done' if fc else 'Not yet'}<br>"
         f"🌾 <b style='color:#22c55e;'>Advisories:</b> {adv} saved</div>",
         unsafe_allow_html=True)
-    st.markdown("<hr style='border-color:#1e293b;margin:.7rem 0;'>",unsafe_allow_html=True)
+    st.markdown("<hr style='border-color:#1e293b;margin:.7rem 0;'>", unsafe_allow_html=True)
     st.markdown(
         "<p style='font-size:.65rem;color:#334155;text-align:center;'>"
-        "GraphCast · FourCastNet · Pangu-Weather</p>",unsafe_allow_html=True)
+        "GraphCast · FourCastNet · Pangu-Weather</p>", unsafe_allow_html=True)
+
+
 
 # ── Banner + title ────────────────────────────────────────────────────────────
 st.markdown(
